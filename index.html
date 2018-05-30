@@ -183,20 +183,22 @@
 
 <script>
   var fireballSize = 22;
-  var getFireballSpeed = function (left) {
-    // Если фаербол брошен влево, то он летит по ветру со скоростью 5, иначе он летит против ветра со скоростью 2
-    return left ? 5 : -2;
-  };
   var wizardSpeed = 3;
   var wizardWidth = 70;
+
+  var getFireballSpeed = function (left) {
+    return left ? 5 : 2;
+  };
+
   var getWizardHeight = function () {
-    // Возвращает пропорциональную высоту мага
     return 1.337 * wizardWidth;
   };
+
   var getWizardX = function (width) {
     // Возвращает такую координату X, чтобы центр фигурки мага находился посередине игрового поля
-    return width / 2 - wizardWidth / 2;
+    return (width - wizardWidth) / 2;
   };
+
   var getWizardY = function (height) {
     // Возвращает такую координату Y, чтобы центр фигурки мага находился на высоте две трети игрового поля от земли
     return height / 3 - getWizardHeight() / 2;
