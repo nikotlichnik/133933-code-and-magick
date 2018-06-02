@@ -14,7 +14,7 @@ var TEXT_FONT = '16px "PT Mono"';
 var TEXT_LINE_HEIGHT = 20;
 var TEXT_COLOR = '#000';
 
-// Параметры сообщения о выигрыше
+// Параметры сообщения о победе
 var MESSAGE_TEXT = 'Ура вы победили!\nСписок результатов:';
 var MESSAGE_X_OFFSET = 20;
 var MESSAGE_Y_OFFSET = 20;
@@ -79,14 +79,14 @@ var getMaxElement = function (arr) {
   return maxElement;
 };
 
-// Функция отрисовки гистограммы с подписями к ней
+// Функция отрисовки гистограммы с подписями у столбцов
 var renderHistogram = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
   var histogramX = CLOUD_X + HISTOGRAM_X_OFFSET;
   var histogramY = CLOUD_Y + HISTOGRAM_Y_OFFSET;
 
   for (var i = 0; i < names.length; i++) {
-    // Рисуем столбцы
+    // Рисуем столбец
     var barHeight = (HISTOGRAM_HEIGHT * times[i] / maxTime) - TIME_HEIGHT;
     var barX = histogramX + BAR_GAP * i + BAR_WIDTH * i;
     var barY = histogramY + (HISTOGRAM_HEIGHT - barHeight);
@@ -113,7 +113,7 @@ window.renderStatistics = function (ctx, names, times) {
   // Рисуем основное облако
   renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_MAIN_COLOR);
 
-  // Рисуем сообщение
+  // Рисуем сообщение о победе
   var messageX = CLOUD_X + MESSAGE_X_OFFSET;
   var messageY = CLOUD_Y + MESSAGE_Y_OFFSET;
   renderCloudText(ctx, messageX, messageY, MESSAGE_TEXT);
