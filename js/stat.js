@@ -78,7 +78,7 @@ var getBlueColor = function () {
 };
 
 // Функция определения цвета столбца в зависимости от имени пользователя
-var getColor = function (name) {
+var getBarColor = function (name) {
   return name === 'Вы' ? barParams.CURRENT_PLAYER_COLOR : getBlueColor();
 };
 
@@ -93,7 +93,7 @@ var renderHistogram = function (ctx, names, times) {
     var barHeight = (histogramParams.HEIGHT * times[i] / maxTime) - timeParams.HEIGHT;
     var barX = histogramX + barParams.GAP * i + barParams.WIDTH * i;
     var barY = histogramY + (histogramParams.HEIGHT - barHeight);
-    ctx.fillStyle = getColor(names[i]);
+    ctx.fillStyle = getBarColor(names[i]);
     ctx.fillRect(barX, barY, barParams.WIDTH, barHeight);
 
     // Рисуем имя игрока
