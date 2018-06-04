@@ -100,11 +100,11 @@ var getBarColor = function (name) {
 };
 
 // Функция отрисовки столбца гистограммы с подписями
-var renderBar = function (ctx, time, name, maxTime, orderNumber) {
+var renderBar = function (ctx, time, name, maxTime, orderNumber, histogramX, histogramY) {
   // Рисуем столбец
   var barHeight = (histogramParams.HEIGHT * time / maxTime) - timeParams.HEIGHT;
-  var barX = histogramParams.x + (barParams.GAP + barParams.WIDTH) * orderNumber;
-  var barY = histogramParams.y + (histogramParams.HEIGHT - barHeight);
+  var barX = histogramX + (barParams.GAP + barParams.WIDTH) * orderNumber;
+  var barY = histogramY + (histogramParams.HEIGHT - barHeight);
   ctx.fillStyle = getBarColor(name);
   ctx.fillRect(barX, barY, barParams.WIDTH, barHeight);
 
@@ -135,9 +135,9 @@ window.renderStatistics = function (ctx, names, times) {
 
   // Рисуем гистограмму
   var maxTime = Math.max.apply(null, times);
-  histogramParams.x = cloudParams.X + histogramParams.X_OFFSET;
-  histogramParams.y = cloudParams.Y + histogramParams.Y_OFFSET;
+  var histogramX = cloudParams.X + histogramParams.X_OFFSET;
+  var histogramY = cloudParams.Y + histogramParams.Y_OFFSET;
   for (var i = 0; i < names.length; i++) {
-    renderBar(ctx, times[i], names[i], maxTime, i);
+    renderBar(ctx, times[i], names[i], maxTime, i, histogramX, histogramY);
   }
 };
