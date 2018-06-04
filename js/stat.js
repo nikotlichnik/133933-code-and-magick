@@ -82,29 +82,23 @@ var getBarColor = function (name) {
   return name === 'Вы' ? barParams.CURRENT_PLAYER_COLOR : getBlueColor();
 };
 
-// Функция отрисовки гистограммы с подписями у столбцов
-var renderHistogram = function (ctx, names, times) {
-  var maxTime = Math.max.apply(null, times);
-  var histogramX = cloudParams.X + histogramParams.X_OFFSET;
-  var histogramY = cloudParams.Y + histogramParams.Y_OFFSET;
+// Функция отрисовки столбца гистограммы с подписями
+var renderBar = function (ctx, time, name, maxTime, orderNumber) {
+  // Рисуем столбец
+  var barHeight = (histogramParams.HEIGHT * time / maxTime) - timeParams.HEIGHT;
+  var barX = histogramParams.x + (barParams.GAP + barParams.WIDTH) * orderNumber;
+  var barY = histogramParams.y + (histogramParams.HEIGHT - barHeight);
+  ctx.fillStyle = getBarColor(name);
+  ctx.fillRect(barX, barY, barParams.WIDTH, barHeight);
 
-  for (var i = 0; i < names.length; i++) {
-    // Рисуем столбец
-    var barHeight = (histogramParams.HEIGHT * times[i] / maxTime) - timeParams.HEIGHT;
-    var barX = histogramX + barParams.GAP * i + barParams.WIDTH * i;
-    var barY = histogramY + (histogramParams.HEIGHT - barHeight);
-    ctx.fillStyle = getBarColor(names[i]);
-    ctx.fillRect(barX, barY, barParams.WIDTH, barHeight);
+  // Рисуем имя игрока
+  var nameY = barY + barHeight + nameParams.MARGIN_TOP;
+  renderCloudText(ctx, barX, nameY, name);
 
-    // Рисуем имя игрока
-    var nameY = barY + barHeight + nameParams.MARGIN_TOP;
-    renderCloudText(ctx, barX, nameY, names[i]);
-
-    // Рисуем время игрока
-    var time = Math.round(times[i]).toString();
-    var timeY = barY - timeParams.MARGIN_BOTTOM;
-    renderCloudText(ctx, barX, timeY, time);
-  }
+  // Рисуем время игрока
+  time = Math.round(time).toString();
+  var timeY = barY - timeParams.MARGIN_BOTTOM;
+  renderCloudText(ctx, barX, timeY, time);
 };
 
 window.renderStatistics = function (ctx, names, times) {
@@ -122,5 +116,10 @@ window.renderStatistics = function (ctx, names, times) {
   renderCloudText(ctx, messageX, messageY, messageParams.CONTENT);
 
   // Рисуем гистограмму
-  renderHistogram(ctx, names, times);
+  var maxTime = Math.max.apply(null, times);
+  histogramParams.x = cloudParams.X + histogramParams.X_OFFSET;
+  histogramParams.y = cloudParams.Y + histogramParams.Y_OFFSET;
+  for (var i = 0; i < names.length; i++) {
+    renderBar(ctx, times[i], names[i], maxTime, i);
+  }
 };
