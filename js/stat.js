@@ -5,14 +5,14 @@ var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
 var CLOUD_X = 100;
 var CLOUD_Y = 10;
-var CLOUD_MAIN_COLOR = '#FFF';
+var CLOUD_MAIN_COLOR = 'rgba(255, 255, 255, 1)';
 var CLOUD_SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
 var CLOUD_GAP = 10;
 
 // Параметры отрисовки текста в облаке
 var TEXT_FONT = '16px "PT Mono"';
 var TEXT_LINE_HEIGHT = 20;
-var TEXT_COLOR = '#000';
+var TEXT_COLOR = 'rgba(0, 0, 0, 1)';
 
 // Параметры сообщения о победе
 var MESSAGE_TEXT = 'Ура вы победили!\nСписок результатов:';
@@ -25,7 +25,7 @@ var HISTOGRAM_X_OFFSET = 40;
 var HISTOGRAM_Y_OFFSET = 80;
 var BAR_WIDTH = 40;
 var BAR_GAP = 50;
-var BAR_CURRENT_PLAYER_COLOR = '#F00';
+var BAR_CURRENT_PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
 var BAR_OTHER_PLAYERS_COLOR = {
   hue: 236,
   saturation: 0,
