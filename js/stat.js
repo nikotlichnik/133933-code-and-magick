@@ -55,15 +55,18 @@ var renderCloudText = function (ctx, x, y, text) {
   }
 };
 
-// Функция генерации нового цвета с изменённой насыщенностью
-var generateNewColor = function (color) {
+// Функция генерации нового синего цвета с изменённой насыщенностью
+var getBlueColor = function () {
+  var color = BAR_OTHER_PLAYERS_COLOR;
+
   color.saturation = Math.floor(Math.random() * 100);
+
   return 'hsl(' + color.hue + ', ' + color.saturation + '%, ' + color.lightness + '%)';
 };
 
 // Функция определения цвета столбца в зависимости от имени пользователя
 var getColor = function (name) {
-  return name === 'Вы' ? BAR_CURRENT_PLAYER_COLOR : generateNewColor(BAR_OTHER_PLAYERS_COLOR);
+  return name === 'Вы' ? BAR_CURRENT_PLAYER_COLOR : getBlueColor();
 };
 
 // Функция поиска максимального элемента в массиве
