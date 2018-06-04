@@ -1,63 +1,76 @@
 'use strict';
 
-// Параметры облаков
-var CLOUD_WIDTH = 420;
-var CLOUD_HEIGHT = 270;
-var CLOUD_X = 100;
-var CLOUD_Y = 10;
-var CLOUD_MAIN_COLOR = 'rgba(255, 255, 255, 1)';
-var CLOUD_SHADOW_COLOR = 'rgba(0, 0, 0, 0.7)';
-var CLOUD_GAP = 10;
-
-// Параметры отрисовки текста в облаке
-var TEXT_FONT = '16px "PT Mono"';
-var TEXT_LINE_HEIGHT = 20;
-var TEXT_COLOR = 'rgba(0, 0, 0, 1)';
-
-// Параметры сообщения о победе
-var MESSAGE_TEXT = 'Ура вы победили!\nСписок результатов:';
-var MESSAGE_X_OFFSET = 20;
-var MESSAGE_Y_OFFSET = 20;
-
-// Параметры гистограммы
-var HISTOGRAM_HEIGHT = 150;
-var HISTOGRAM_X_OFFSET = 40;
-var HISTOGRAM_Y_OFFSET = 80;
-var BAR_WIDTH = 40;
-var BAR_GAP = 50;
-var BAR_CURRENT_PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
-var BAR_OTHER_PLAYERS_COLOR = {
-  hue: 236,
-  saturation: 0,
-  lightness: 50
+var cloudParams = {
+  WIDTH: 420,
+  HEIGHT: 270,
+  X: 100,
+  Y: 10,
+  MAIN_COLOR: 'rgba(255, 255, 255, 1)',
+  SHADOW_COLOR: 'rgba(0, 0, 0, 0.7)',
+  GAP: 10
 };
-var TIME_BOTTOM_OFFSET = 20;
-var TIME_HEIGHT = 10;
-var NAME_TOP_OFFSET = 10;
+
+var textParams = {
+  FONT: '16px "PT Mono"',
+  LINE_HEIGHT: 20,
+  COLOR: 'rgba(0, 0, 0, 1)'
+};
+
+var messageParams = {
+  CONTENT: 'Ура вы победили!\nСписок результатов:',
+  X_OFFSET: 20,
+  Y_OFFSET: 20
+};
+
+var histogramParams = {
+  HEIGHT: 150,
+  X_OFFSET: 40,
+  Y_OFFSET: 80
+};
+
+var barParams = {
+  WIDTH: 40,
+  GAP: 50,
+  CURRENT_PLAYER_COLOR: 'rgba(255, 0, 0, 1)',
+  OTHER_PLAYERS_COLOR: {
+    hue: 236,
+    saturation: 0,
+    lightness: 50
+  }
+};
+
+var timeParams = {
+  HEIGHT: 10,
+  MARGIN_BOTTOM: 20
+};
+
+var nameParams = {
+  MARGIN_TOP: 10
+};
 
 // Функция отрисовки облака
 var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  ctx.fillRect(x, y, cloudParams.WIDTH, cloudParams.HEIGHT);
 };
 
 // Функция отрисовки на канвасе многострочного текста
 var renderCloudText = function (ctx, x, y, text) {
   var textLines = text.split('\n');
 
-  ctx.font = TEXT_FONT;
-  ctx.fillStyle = TEXT_COLOR;
+  ctx.font = textParams.FONT;
+  ctx.fillStyle = textParams.COLOR;
   ctx.textBaseline = 'hanging';
 
   for (var i = 0; i < textLines.length; i++) {
-    var lineY = y + TEXT_LINE_HEIGHT * i;
+    var lineY = y + textParams.LINE_HEIGHT * i;
     ctx.fillText(textLines[i], x, lineY);
   }
 };
 
 // Функция генерации нового синего цвета с изменённой насыщенностью
 var getBlueColor = function () {
-  var color = BAR_OTHER_PLAYERS_COLOR;
+  var color = barParams.OTHER_PLAYERS_COLOR;
 
   color.saturation = Math.floor(Math.random() * 100);
 
@@ -66,7 +79,7 @@ var getBlueColor = function () {
 
 // Функция определения цвета столбца в зависимости от имени пользователя
 var getColor = function (name) {
-  return name === 'Вы' ? BAR_CURRENT_PLAYER_COLOR : getBlueColor();
+  return name === 'Вы' ? barParams.CURRENT_PLAYER_COLOR : getBlueColor();
 };
 
 // Функция поиска максимального элемента в массиве
@@ -85,41 +98,41 @@ var getMaxElement = function (arr) {
 // Функция отрисовки гистограммы с подписями у столбцов
 var renderHistogram = function (ctx, names, times) {
   var maxTime = getMaxElement(times);
-  var histogramX = CLOUD_X + HISTOGRAM_X_OFFSET;
-  var histogramY = CLOUD_Y + HISTOGRAM_Y_OFFSET;
+  var histogramX = cloudParams.X + histogramParams.X_OFFSET;
+  var histogramY = cloudParams.Y + histogramParams.Y_OFFSET;
 
   for (var i = 0; i < names.length; i++) {
     // Рисуем столбец
-    var barHeight = (HISTOGRAM_HEIGHT * times[i] / maxTime) - TIME_HEIGHT;
-    var barX = histogramX + BAR_GAP * i + BAR_WIDTH * i;
-    var barY = histogramY + (HISTOGRAM_HEIGHT - barHeight);
+    var barHeight = (histogramParams.HEIGHT * times[i] / maxTime) - timeParams.HEIGHT;
+    var barX = histogramX + barParams.GAP * i + barParams.WIDTH * i;
+    var barY = histogramY + (histogramParams.HEIGHT - barHeight);
     ctx.fillStyle = getColor(names[i]);
-    ctx.fillRect(barX, barY, BAR_WIDTH, barHeight);
+    ctx.fillRect(barX, barY, barParams.WIDTH, barHeight);
 
     // Рисуем имя игрока
-    var nameY = barY + barHeight + NAME_TOP_OFFSET;
+    var nameY = barY + barHeight + nameParams.MARGIN_TOP;
     renderCloudText(ctx, barX, nameY, names[i]);
 
     // Рисуем время игрока
     var time = Math.round(times[i]).toString();
-    var timeY = barY - TIME_BOTTOM_OFFSET;
+    var timeY = barY - timeParams.MARGIN_BOTTOM;
     renderCloudText(ctx, barX, timeY, time);
   }
 };
 
 window.renderStatistics = function (ctx, names, times) {
   // Рисуем тень
-  var shadowX = CLOUD_X + CLOUD_GAP;
-  var shadowY = CLOUD_Y + CLOUD_GAP;
-  renderCloud(ctx, shadowX, shadowY, CLOUD_SHADOW_COLOR);
+  var shadowX = cloudParams.X + cloudParams.GAP;
+  var shadowY = cloudParams.Y + cloudParams.GAP;
+  renderCloud(ctx, shadowX, shadowY, cloudParams.SHADOW_COLOR);
 
   // Рисуем основное облако
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, CLOUD_MAIN_COLOR);
+  renderCloud(ctx, cloudParams.X, cloudParams.Y, cloudParams.MAIN_COLOR);
 
   // Рисуем сообщение о победе
-  var messageX = CLOUD_X + MESSAGE_X_OFFSET;
-  var messageY = CLOUD_Y + MESSAGE_Y_OFFSET;
-  renderCloudText(ctx, messageX, messageY, MESSAGE_TEXT);
+  var messageX = cloudParams.X + messageParams.X_OFFSET;
+  var messageY = cloudParams.Y + messageParams.Y_OFFSET;
+  renderCloudText(ctx, messageX, messageY, messageParams.CONTENT);
 
   // Рисуем гистограмму
   renderHistogram(ctx, names, times);
