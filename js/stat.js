@@ -82,22 +82,9 @@ var getColor = function (name) {
   return name === 'Вы' ? barParams.CURRENT_PLAYER_COLOR : getBlueColor();
 };
 
-// Функция поиска максимального элемента в массиве
-var getMaxElement = function (arr) {
-  var maxElement = arr[0];
-
-  for (var i = 1; i < arr.length; i++) {
-    if (arr[i] > maxElement) {
-      maxElement = arr[i];
-    }
-  }
-
-  return maxElement;
-};
-
 // Функция отрисовки гистограммы с подписями у столбцов
 var renderHistogram = function (ctx, names, times) {
-  var maxTime = getMaxElement(times);
+  var maxTime = Math.max.apply(null, times);
   var histogramX = cloudParams.X + histogramParams.X_OFFSET;
   var histogramY = cloudParams.Y + histogramParams.Y_OFFSET;
 
