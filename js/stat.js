@@ -62,9 +62,9 @@ var renderMultiLineText = function (ctx, message, text) {
   var testLine = '';
   var testLineWidth = 0;
 
-  message.x = cloudParams.X + message.X_OFFSET;
-  message.y = cloudParams.Y + message.Y_OFFSET;
-  var currentLineY = message.y;
+  var messageX = cloudParams.X + message.X_OFFSET;
+  var messageY = cloudParams.Y + message.Y_OFFSET;
+  var currentLineY = messageY;
 
   ctx.font = text.FONT;
   ctx.fillStyle = text.COLOR;
@@ -75,14 +75,14 @@ var renderMultiLineText = function (ctx, message, text) {
     testLineWidth = ctx.measureText(testLine).width;
 
     if (testLineWidth > message.MAX_LINE_WIDTH) {
-      ctx.fillText(currentLine, message.x, currentLineY);
+      ctx.fillText(currentLine, messageX, currentLineY);
       currentLine = words[i] + ' ';
       currentLineY += text.LINE_HEIGHT;
     } else {
       currentLine = testLine;
     }
   }
-  ctx.fillText(currentLine, message.x, currentLineY);
+  ctx.fillText(currentLine, messageX, currentLineY);
 };
 
 // Функция генерации нового синего цвета с изменённой насыщенностью
