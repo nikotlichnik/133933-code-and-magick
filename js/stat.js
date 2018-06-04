@@ -16,10 +16,11 @@ var textParams = {
   COLOR: 'rgba(0, 0, 0, 1)'
 };
 
-var messageParams = {
-  CONTENT: 'Ура вы победили!\nСписок результатов:',
+var winMessageParams = {
+  CONTENT: 'Ура вы победили! Список результатов:',
   X_OFFSET: 20,
-  Y_OFFSET: 20
+  Y_OFFSET: 20,
+  MAX_LINE_WIDTH: 200
 };
 
 var histogramParams = {
@@ -55,17 +56,33 @@ var renderCloud = function (ctx, x, y, color) {
 };
 
 // Функция отрисовки на канвасе многострочного текста
-var renderCloudText = function (ctx, x, y, text) {
-  var textLines = text.split('\n');
+var renderMultiLineText = function (ctx, message, text) {
+  var words = message.CONTENT.split(' ');
+  var currentLine = '';
+  var testLine = '';
+  var testLineWidth = 0;
 
-  ctx.font = textParams.FONT;
-  ctx.fillStyle = textParams.COLOR;
+  message.x = cloudParams.X + message.X_OFFSET;
+  message.y = cloudParams.Y + message.Y_OFFSET;
+  var currentLineY = message.y;
+
+  ctx.font = text.FONT;
+  ctx.fillStyle = text.COLOR;
   ctx.textBaseline = 'hanging';
 
-  for (var i = 0; i < textLines.length; i++) {
-    var lineY = y + textParams.LINE_HEIGHT * i;
-    ctx.fillText(textLines[i], x, lineY);
+  for (var i = 0; i < words.length; i++) {
+    testLine = currentLine + words[i] + ' ';
+    testLineWidth = ctx.measureText(testLine).width;
+
+    if (testLineWidth > message.MAX_LINE_WIDTH) {
+      ctx.fillText(currentLine, message.x, currentLineY);
+      currentLine = words[i] + ' ';
+      currentLineY += text.LINE_HEIGHT;
+    } else {
+      currentLine = testLine;
+    }
   }
+  ctx.fillText(currentLine, message.x, currentLineY);
 };
 
 // Функция генерации нового синего цвета с изменённой насыщенностью
@@ -93,12 +110,15 @@ var renderBar = function (ctx, time, name, maxTime, orderNumber) {
 
   // Рисуем имя игрока
   var nameY = barY + barHeight + nameParams.MARGIN_TOP;
-  renderCloudText(ctx, barX, nameY, name);
+  ctx.font = textParams.FONT;
+  ctx.fillStyle = textParams.COLOR;
+  ctx.textBaseline = 'hanging';
+  ctx.fillText(name, barX, nameY);
 
   // Рисуем время игрока
-  time = Math.round(time).toString();
   var timeY = barY - timeParams.MARGIN_BOTTOM;
-  renderCloudText(ctx, barX, timeY, time);
+  time = Math.round(time);
+  ctx.fillText(time, barX, timeY);
 };
 
 window.renderStatistics = function (ctx, names, times) {
@@ -111,9 +131,7 @@ window.renderStatistics = function (ctx, names, times) {
   renderCloud(ctx, cloudParams.X, cloudParams.Y, cloudParams.MAIN_COLOR);
 
   // Рисуем сообщение о победе
-  var messageX = cloudParams.X + messageParams.X_OFFSET;
-  var messageY = cloudParams.Y + messageParams.Y_OFFSET;
-  renderCloudText(ctx, messageX, messageY, messageParams.CONTENT);
+  renderMultiLineText(ctx, winMessageParams, textParams);
 
   // Рисуем гистограмму
   var maxTime = Math.max.apply(null, times);
