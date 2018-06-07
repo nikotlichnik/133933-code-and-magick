@@ -7,9 +7,47 @@ var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
-// Функция, возвращающая случайный индекс элемента из массива
-var getRandomIndexOfArray = function (array) {
-  return Math.floor(Math.random() * array.length);
+
+// Функция, возвращающая случайное число от нуля до переданного параметра включительно
+var getRandomNumberInRange = function (endBorder) {
+  return Math.round(Math.random() * endBorder);
+};
+
+// Функция, возвращающая случайно перемешанную копию массива (тасование Фишера — Йетса)
+var getShuffledArray = function (array) {
+  var shuffledArray = array.slice(0);
+
+  for (var i = array.length - 1; i > 0; i--) {
+    var swapIndex = getRandomNumberInRange(i);
+    var swap = shuffledArray[swapIndex];
+    shuffledArray[swapIndex] = shuffledArray[i];
+    shuffledArray[i] = swap;
+  }
+
+  return shuffledArray;
+};
+
+// Функция создания полного имени из имени и фамилии
+var getFullName = function (wizardNumber) {
+  var name = shuffledNames[wizardNumber];
+  var surname = shuffledSurnames[wizardNumber];
+
+  return name + ' ' + surname;
+};
+
+// Функция создания похожего персонажа
+var generateSimilarWizard = function (wizardNumber) {
+  var randomWizardData = {
+    name: '',
+    coatColor: '',
+    eyesColor: ''
+  };
+
+  randomWizardData.name = getFullName(wizardNumber);
+  randomWizardData.coatColor = shuffledCoatColors[wizardNumber];
+  randomWizardData.eyesColor = shuffledEyesColors[wizardNumber];
+
+  return randomWizardData;
 };
 
 // Функция создания массива похожих персонажей
@@ -17,15 +55,7 @@ var generateSimilarWizards = function () {
   var randomWizards = [];
 
   for (var i = 0; i < NUM_OF_SIMILAR_WIZARDS; i++) {
-    var randomWizardData = {};
-    var name = NAMES[getRandomIndexOfArray(NAMES)];
-    var surname = SURNAMES[getRandomIndexOfArray(SURNAMES)];
-
-    randomWizardData.name = name + ' ' + surname;
-    randomWizardData.coatColor = COAT_COLORS[getRandomIndexOfArray(COAT_COLORS)];
-    randomWizardData.eyesColor = EYES_COLORS[getRandomIndexOfArray(EYES_COLORS)];
-
-    randomWizards.push(randomWizardData);
+    randomWizards.push(generateSimilarWizard(i));
   }
 
   return randomWizards;
@@ -56,6 +86,11 @@ var createWizardsFragment = function () {
   return fragment;
 };
 
+// Генерация перетасованных массивов
+var shuffledNames = getShuffledArray(NAMES);
+var shuffledSurnames = getShuffledArray(SURNAMES);
+var shuffledCoatColors = getShuffledArray(COAT_COLORS);
+var shuffledEyesColors = getShuffledArray(EYES_COLORS);
 
 // Показываем окно настройки
 var userDialog = document.querySelector('.setup');
