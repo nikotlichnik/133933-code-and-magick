@@ -7,6 +7,10 @@ var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
+var userDialog = document.querySelector('.setup');
+var template = document.querySelector('#similar-wizard-template');
+var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
+
 // Функция, возвращающая случайно перемешанную копию массива (тасование Фишера — Йетса)
 var getShuffledArray = function (array) {
   var shuffledArray = array.slice(0);
@@ -95,9 +99,5 @@ var shuffledNames = getShuffledArray(NAMES);
 var shuffledSurnames = getShuffledArray(SURNAMES);
 var shuffledCoatColors = getShuffledArray(COAT_COLORS);
 var shuffledEyesColors = getShuffledArray(EYES_COLORS);
-
-var userDialog = document.querySelector('.setup');
-var template = document.querySelector('#similar-wizard-template');
-var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
 
 initPage();
