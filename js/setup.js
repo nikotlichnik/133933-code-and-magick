@@ -35,17 +35,11 @@ var getFullName = function (wizardNumber) {
 
 // Функция создания похожего персонажа
 var generateSimilarWizard = function (wizardNumber) {
-  var randomWizardData = {
-    name: '',
-    coatColor: '',
-    eyesColor: ''
+  return {
+    name: getFullName(wizardNumber),
+    coatColor: shuffledCoatColors[wizardNumber],
+    eyesColor: shuffledEyesColors[wizardNumber]
   };
-
-  randomWizardData.name = getFullName(wizardNumber);
-  randomWizardData.coatColor = shuffledCoatColors[wizardNumber];
-  randomWizardData.eyesColor = shuffledEyesColors[wizardNumber];
-
-  return randomWizardData;
 };
 
 // Функция создания массива похожих персонажей
