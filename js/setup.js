@@ -45,10 +45,10 @@ var generateSimilarWizard = function (wizardNumber) {
 };
 
 // Функция создания массива похожих персонажей
-var generateSimilarWizards = function () {
+var generateSimilarWizards = function (numberOfWizards) {
   var randomWizards = [];
 
-  for (var i = 0; i < NUM_OF_SIMILAR_WIZARDS; i++) {
+  for (var i = 0; i < numberOfWizards; i++) {
     randomWizards.push(generateSimilarWizard(i));
   }
 
@@ -68,7 +68,7 @@ var createWizardElement = function (wizardData) {
 
 // Функция заполнения фрагмента DOM-элементами на основе массива с похожими волшебниками
 var createWizardsFragment = function () {
-  var similarWizards = generateSimilarWizards();
+  var similarWizards = generateSimilarWizards(NUM_OF_SIMILAR_WIZARDS);
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < similarWizards.length; i++) {
