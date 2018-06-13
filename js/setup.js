@@ -143,7 +143,7 @@ var initPage = function () {
     openUserDialog();
   });
 
-  openDialogImage.addEventListener('click', function (evt) {
+  openDialogImage.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       openUserDialog();
     }
@@ -151,6 +151,12 @@ var initPage = function () {
 
   closeDialogButton.addEventListener('click', function () {
     closeUserDialog();
+  });
+
+  closeDialogButton.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      closeUserDialog();
+    }
   });
 
   wizardCoat.addEventListener('click', function (evt) {
