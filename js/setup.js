@@ -6,6 +6,7 @@ var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Крис�
 var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
@@ -21,6 +22,9 @@ var wizardCoatInput = userDialog.querySelector('input[name="coat-color"]');
 
 var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
 var wizardEyesInput = userDialog.querySelector('input[name="eyes-color"]');
+
+var fireball = userDialog.querySelector('.setup-fireball-wrap');
+var fireballInput = userDialog.querySelector('input[name="fireball-color"]');
 
 var template = document.querySelector('#similar-wizard-template');
 var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
@@ -109,15 +113,29 @@ var closeUserDialog = function () {
   document.removeEventListener('keydown', userDialogEscPressHandler);
 };
 
-var changeElementColor = function (element, colors, inputElement) {
+/**
+ * @param {string} property - свойство, которое необходимо изменить
+ * @param {HTMLElement} element - элемент, у которого изменяется цвет
+ * @param {Array.<string>} colors - список доступных цветов
+ * @param {HTMLInputElement} inputElement - поле ввода, содержащее значение текущего цвета
+ */
+var changeElementColor = function (property, element, colors, inputElement) {
   var currentColor = inputElement.value;
   var currentColorIndex = colors.indexOf(currentColor);
   var lastColorIndex = colors.length - 1;
   var newColor = (currentColorIndex === lastColorIndex) ? colors[0] : colors[currentColorIndex + 1];
 
-  element.style.fill = newColor;
+  if (property === 'fill') {
+    element.style.fill = newColor;
+  }
+
+  if (property === 'bgColor') {
+    element.style.backgroundColor = newColor;
+  }
+
   inputElement.value = newColor;
 };
+
 
 // Функция инициализации страницы
 var initPage = function () {
@@ -136,11 +154,15 @@ var initPage = function () {
   });
 
   wizardCoat.addEventListener('click', function (evt) {
-    changeElementColor(evt.target, COAT_COLORS, wizardCoatInput);
+    changeElementColor('fill', evt.target, COAT_COLORS, wizardCoatInput);
   });
 
   wizardEyes.addEventListener('click', function (evt) {
-    changeElementColor(evt.target, EYES_COLORS, wizardEyesInput);
+    changeElementColor('fill', evt.target, EYES_COLORS, wizardEyesInput);
+  });
+
+  fireball.addEventListener('click', function (evt) {
+    changeElementColor('bgColor', evt.target, FIREBALL_COLORS, fireballInput);
   });
 
   // Добавляем фрагмент с похожими волшебниками в нужный блок
