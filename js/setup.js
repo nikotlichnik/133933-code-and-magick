@@ -7,7 +7,15 @@ var SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Валь
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var userDialog = document.querySelector('.setup');
+var userNameInput = userDialog.querySelector('.setup-user-name');
+var openDialogBlock = document.querySelector('.setup-open');
+var openDialogImage = openDialogBlock.querySelector('.setup-open-icon');
+var closeDialogButton = userDialog.querySelector('.setup-close');
+
 var template = document.querySelector('#similar-wizard-template');
 var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
 
@@ -76,10 +84,40 @@ var createWizardsFragment = function () {
   return fragment;
 };
 
-// Фукнция инициализации страницы
-var initPage = function () {
-  // Показываем окно настройки
+var openUserDialog = function () {
   userDialog.classList.remove('hidden');
+  document.addEventListener('keydown', userDialogEscPressHandler);
+};
+
+var userDialogEscPressHandler = function (evt) {
+  var isEscapePressed = evt.keyCode === ESC_KEYCODE;
+  var isInputInFocus = document.activeElement === userNameInput;
+
+  if (isEscapePressed && !isInputInFocus) {
+    closeUserDialog();
+  }
+};
+
+var closeUserDialog = function () {
+  userDialog.classList.add('hidden');
+  document.removeEventListener('keydown', userDialogEscPressHandler);
+};
+
+// Функция инициализации страницы
+var initPage = function () {
+  openDialogBlock.addEventListener('click', function () {
+    openUserDialog();
+  });
+
+  openDialogImage.addEventListener('click', function (evt) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      openUserDialog();
+    }
+  });
+
+  closeDialogButton.addEventListener('click', function () {
+    closeUserDialog();
+  });
 
   // Добавляем фрагмент с похожими волшебниками в нужный блок
   userDialog.querySelector('.setup-similar-list').appendChild(createWizardsFragment());
