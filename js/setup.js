@@ -10,11 +10,14 @@ var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
-var userDialog = document.querySelector('.setup');
-var userNameInput = userDialog.querySelector('.setup-user-name');
 var openDialogBlock = document.querySelector('.setup-open');
 var openDialogImage = openDialogBlock.querySelector('.setup-open-icon');
+var userDialog = document.querySelector('.setup');
+var userNameInput = userDialog.querySelector('.setup-user-name');
 var closeDialogButton = userDialog.querySelector('.setup-close');
+
+var wizardCoat = userDialog.querySelector('.wizard-coat');
+var wizardCoatInput = userDialog.querySelector('input[name="coat-color"]');
 
 var template = document.querySelector('#similar-wizard-template');
 var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
@@ -103,6 +106,15 @@ var closeUserDialog = function () {
   document.removeEventListener('keydown', userDialogEscPressHandler);
 };
 
+var changeWizardCoatColor = function (currentColor) {
+  var currentIndex = COAT_COLORS.indexOf(currentColor);
+  var lastIndex = COAT_COLORS.length - 1;
+  var newColor = (currentIndex === lastIndex) ? COAT_COLORS[0] : COAT_COLORS[currentIndex + 1];
+
+  wizardCoat.style.fill = newColor;
+  wizardCoatInput.value = newColor;
+};
+
 // Функция инициализации страницы
 var initPage = function () {
   openDialogBlock.addEventListener('click', function () {
@@ -117,6 +129,10 @@ var initPage = function () {
 
   closeDialogButton.addEventListener('click', function () {
     closeUserDialog();
+  });
+
+  wizardCoat.addEventListener('click', function (evt) {
+    changeWizardCoatColor(evt.target.style.fill);
   });
 
   // Добавляем фрагмент с похожими волшебниками в нужный блок
