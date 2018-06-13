@@ -16,8 +16,11 @@ var userDialog = document.querySelector('.setup');
 var userNameInput = userDialog.querySelector('.setup-user-name');
 var closeDialogButton = userDialog.querySelector('.setup-close');
 
-var wizardCoat = userDialog.querySelector('.wizard-coat');
+var wizardCoat = userDialog.querySelector('.setup-wizard .wizard-coat');
 var wizardCoatInput = userDialog.querySelector('input[name="coat-color"]');
+
+var wizardEyes = userDialog.querySelector('.setup-wizard .wizard-eyes');
+var wizardEyesInput = userDialog.querySelector('input[name="eyes-color"]');
 
 var template = document.querySelector('#similar-wizard-template');
 var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
@@ -106,13 +109,14 @@ var closeUserDialog = function () {
   document.removeEventListener('keydown', userDialogEscPressHandler);
 };
 
-var changeWizardCoatColor = function (currentColor) {
-  var currentIndex = COAT_COLORS.indexOf(currentColor);
-  var lastIndex = COAT_COLORS.length - 1;
-  var newColor = (currentIndex === lastIndex) ? COAT_COLORS[0] : COAT_COLORS[currentIndex + 1];
+var changeElementColor = function (element, colors, inputElement) {
+  var currentColor = inputElement.value;
+  var currentColorIndex = colors.indexOf(currentColor);
+  var lastColorIndex = colors.length - 1;
+  var newColor = (currentColorIndex === lastColorIndex) ? colors[0] : colors[currentColorIndex + 1];
 
-  wizardCoat.style.fill = newColor;
-  wizardCoatInput.value = newColor;
+  element.style.fill = newColor;
+  inputElement.value = newColor;
 };
 
 // Функция инициализации страницы
@@ -132,7 +136,11 @@ var initPage = function () {
   });
 
   wizardCoat.addEventListener('click', function (evt) {
-    changeWizardCoatColor(evt.target.style.fill);
+    changeElementColor(evt.target, COAT_COLORS, wizardCoatInput);
+  });
+
+  wizardEyes.addEventListener('click', function (evt) {
+    changeElementColor(evt.target, EYES_COLORS, wizardEyesInput);
   });
 
   // Добавляем фрагмент с похожими волшебниками в нужный блок
