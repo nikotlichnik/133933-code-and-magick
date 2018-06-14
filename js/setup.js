@@ -96,25 +96,6 @@ var createWizardsFragment = function () {
   return fragment;
 };
 
-var openUserDialog = function () {
-  userDialog.classList.remove('hidden');
-  document.addEventListener('keydown', userDialogEscPressHandler);
-};
-
-var userDialogEscPressHandler = function (evt) {
-  var isEscapePressed = evt.keyCode === KEYCODES.ESC;
-  var isInputInFocus = document.activeElement === userNameInput;
-
-  if (isEscapePressed && !isInputInFocus) {
-    closeUserDialog();
-  }
-};
-
-var closeUserDialog = function () {
-  userDialog.classList.add('hidden');
-  document.removeEventListener('keydown', userDialogEscPressHandler);
-};
-
 /**
  * @param {string} property - свойство, которое необходимо изменить
  * @param {HTMLElement} element - элемент, у которого изменяется цвет
@@ -138,6 +119,60 @@ var changeElementColor = function (property, element, colors, inputElement) {
   inputElement.value = newColor;
 };
 
+var closeDialogButtonClickHandler = function () {
+  closeUserDialog();
+};
+
+var closeDialogButtonEscPressHandler = function (evt) {
+  if (evt.keyCode === KEYCODES.ENTER) {
+    closeUserDialog();
+  }
+};
+
+var wizardCoatClickHandler = function (evt) {
+  changeElementColor('fill', evt.target, COAT_COLORS, wizardCoatInput);
+};
+
+
+var wizardEyesClickHandler = function (evt) {
+  changeElementColor('fill', evt.target, EYES_COLORS, wizardEyesInput);
+};
+
+
+var fireballClickHandler = function (evt) {
+  changeElementColor('bgColor', evt.target, FIREBALL_COLORS, fireballInput);
+};
+
+var userDialogEscPressHandler = function (evt) {
+  var isEscapePressed = evt.keyCode === KEYCODES.ESC;
+  var isInputInFocus = document.activeElement === userNameInput;
+
+  if (isEscapePressed && !isInputInFocus) {
+    closeUserDialog();
+  }
+};
+
+var openUserDialog = function () {
+  userDialog.classList.remove('hidden');
+
+  document.addEventListener('keydown', userDialogEscPressHandler);
+  closeDialogButton.addEventListener('click', closeDialogButtonClickHandler);
+  closeDialogButton.addEventListener('keydown', closeDialogButtonEscPressHandler);
+  wizardCoat.addEventListener('click', wizardCoatClickHandler);
+  wizardEyes.addEventListener('click', wizardEyesClickHandler);
+  fireball.addEventListener('click', fireballClickHandler);
+};
+
+var closeUserDialog = function () {
+  userDialog.classList.add('hidden');
+
+  wizardCoat.removeEventListener('click', wizardCoatClickHandler);
+  wizardEyes.removeEventListener('click', wizardEyesClickHandler);
+  fireball.removeEventListener('click', fireballClickHandler);
+  document.removeEventListener('keydown', userDialogEscPressHandler);
+  closeDialogButton.removeEventListener('click', closeDialogButtonClickHandler);
+  closeDialogButton.removeEventListener('keydown', closeDialogButtonEscPressHandler);
+};
 
 // Функция инициализации страницы
 var initPage = function () {
@@ -149,28 +184,6 @@ var initPage = function () {
     if (evt.keyCode === KEYCODES.ENTER) {
       openUserDialog();
     }
-  });
-
-  closeDialogButton.addEventListener('click', function () {
-    closeUserDialog();
-  });
-
-  closeDialogButton.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEYCODES.ENTER) {
-      closeUserDialog();
-    }
-  });
-
-  wizardCoat.addEventListener('click', function (evt) {
-    changeElementColor('fill', evt.target, COAT_COLORS, wizardCoatInput);
-  });
-
-  wizardEyes.addEventListener('click', function (evt) {
-    changeElementColor('fill', evt.target, EYES_COLORS, wizardEyesInput);
-  });
-
-  fireball.addEventListener('click', function (evt) {
-    changeElementColor('bgColor', evt.target, FIREBALL_COLORS, fireballInput);
   });
 
   // Добавляем фрагмент с похожими волшебниками в нужный блок
