@@ -170,11 +170,15 @@ var openUserDialog = function () {
       y: evt.clientY
     };
 
+    var dragged = false;
+
     var dialogMouseMoveHandler = function (moveEvt) {
       var shift = {
         x: moveEvt.clientX - startCoords.x,
         y: moveEvt.clientY - startCoords.y
       };
+
+      dragged = true;
 
       startCoords = {
         x: moveEvt.clientX,
@@ -186,6 +190,14 @@ var openUserDialog = function () {
     };
 
     var dialogMouseUpHandler = function () {
+      if (dragged) {
+        var inputClickHandler = function (clickEvt) {
+          clickEvt.preventDefault();
+          dialogHandle.removeEventListener('click', inputClickHandler);
+        };
+        dialogHandle.addEventListener('click', inputClickHandler);
+      }
+
       document.removeEventListener('mousemove', dialogMouseMoveHandler);
       document.removeEventListener('mouseup', dialogMouseUpHandler);
     };
