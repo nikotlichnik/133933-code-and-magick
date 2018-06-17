@@ -13,6 +13,16 @@ var KEYCODES = {
   ESC: 27
 };
 
+/**
+ * @type {object}
+ * @property {string} DEFAULT_OFFSET_LEFT
+ * @property {string} DEFAULT_OFFSET_TOP
+ */
+var userDialogParams = {
+  DEFAULT_OFFSET_LEFT: '50%',
+  DEFAULT_OFFSET_TOP: '80px'
+};
+
 var openDialogBlock = document.querySelector('.setup-open');
 var openDialogImage = openDialogBlock.querySelector('.setup-open-icon');
 var userDialog = document.querySelector('.setup');
@@ -154,7 +164,52 @@ var userDialogEscPressHandler = function (evt) {
   }
 };
 
+var dialogHandleDragHandler = function (downEvt) {
+  var startCoords = {
+    x: downEvt.clientX,
+    y: downEvt.clientY
+  };
+
+  var dragged = false;
+
+  var dialogMouseMoveHandler = function (moveEvt) {
+    var shift = {
+      x: moveEvt.clientX - startCoords.x,
+      y: moveEvt.clientY - startCoords.y
+    };
+
+    dragged = true;
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    userDialog.style.left = (userDialog.offsetLeft + shift.x) + 'px';
+    userDialog.style.top = (userDialog.offsetTop + shift.y) + 'px';
+  };
+
+  var dialogMouseUpHandler = function () {
+    if (dragged) {
+      var inputClickHandler = function (clickEvt) {
+        clickEvt.preventDefault();
+        dialogHandle.removeEventListener('click', inputClickHandler);
+      };
+      dialogHandle.addEventListener('click', inputClickHandler);
+    }
+
+    document.removeEventListener('mousemove', dialogMouseMoveHandler);
+    document.removeEventListener('mouseup', dialogMouseUpHandler);
+  };
+
+  document.addEventListener('mousemove', dialogMouseMoveHandler);
+  document.addEventListener('mouseup', dialogMouseUpHandler);
+};
+
 var openUserDialog = function () {
+  userDialog.style.left = userDialogParams.DEFAULT_OFFSET_LEFT;
+  userDialog.style.top = userDialogParams.DEFAULT_OFFSET_TOP;
+
   userDialog.classList.remove('hidden');
 
   document.addEventListener('keydown', userDialogEscPressHandler);
@@ -164,47 +219,7 @@ var openUserDialog = function () {
   wizardEyes.addEventListener('click', wizardEyesClickHandler);
   fireball.addEventListener('click', fireballClickHandler);
 
-  dialogHandle.addEventListener('mousedown', function (evt) {
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    var dragged = false;
-
-    var dialogMouseMoveHandler = function (moveEvt) {
-      var shift = {
-        x: moveEvt.clientX - startCoords.x,
-        y: moveEvt.clientY - startCoords.y
-      };
-
-      dragged = true;
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      userDialog.style.left = userDialog.offsetLeft + shift.x + 'px';
-      userDialog.style.top = userDialog.offsetTop + shift.y + 'px';
-    };
-
-    var dialogMouseUpHandler = function () {
-      if (dragged) {
-        var inputClickHandler = function (clickEvt) {
-          clickEvt.preventDefault();
-          dialogHandle.removeEventListener('click', inputClickHandler);
-        };
-        dialogHandle.addEventListener('click', inputClickHandler);
-      }
-
-      document.removeEventListener('mousemove', dialogMouseMoveHandler);
-      document.removeEventListener('mouseup', dialogMouseUpHandler);
-    };
-
-    document.addEventListener('mousemove', dialogMouseMoveHandler);
-    document.addEventListener('mouseup', dialogMouseUpHandler);
-  });
+  dialogHandle.addEventListener('mousedown', dialogHandleDragHandler);
 };
 
 var closeUserDialog = function () {
@@ -216,6 +231,7 @@ var closeUserDialog = function () {
   document.removeEventListener('keydown', userDialogEscPressHandler);
   closeDialogButton.removeEventListener('click', closeDialogButtonClickHandler);
   closeDialogButton.removeEventListener('keydown', closeDialogButtonEscPressHandler);
+  dialogHandle.removeEventListener('mousedown', dialogHandleDragHandler);
 };
 
 // Функция инициализации страницы
