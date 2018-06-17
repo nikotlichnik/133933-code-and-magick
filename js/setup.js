@@ -28,6 +28,8 @@ var wizardEyesInput = userDialog.querySelector('input[name="eyes-color"]');
 var fireball = userDialog.querySelector('.setup-fireball-wrap');
 var fireballInput = userDialog.querySelector('input[name="fireball-color"]');
 
+var dialogHandle = userDialog.querySelector('.upload');
+
 var template = document.querySelector('#similar-wizard-template');
 var similarWizardTemplate = template.content.querySelector('.setup-similar-item');
 
@@ -161,6 +163,36 @@ var openUserDialog = function () {
   wizardCoat.addEventListener('click', wizardCoatClickHandler);
   wizardEyes.addEventListener('click', wizardEyesClickHandler);
   fireball.addEventListener('click', fireballClickHandler);
+
+  dialogHandle.addEventListener('mousedown', function (evt) {
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var dialogMouseMoveHandler = function (moveEvt) {
+      var shift = {
+        x: moveEvt.clientX - startCoords.x,
+        y: moveEvt.clientY - startCoords.y
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      userDialog.style.left = userDialog.offsetLeft + shift.x + 'px';
+      userDialog.style.top = userDialog.offsetTop + shift.y + 'px';
+    };
+
+    var dialogMouseUpHandler = function () {
+      document.removeEventListener('mousemove', dialogMouseMoveHandler);
+      document.removeEventListener('mouseup', dialogMouseUpHandler);
+    };
+
+    document.addEventListener('mousemove', dialogMouseMoveHandler);
+    document.addEventListener('mouseup', dialogMouseUpHandler);
+  });
 };
 
 var closeUserDialog = function () {
